@@ -11,6 +11,7 @@ def workflow() -> pl.LazyFrame:
     normalizing the data, and loading it into PostgreSQL.
     Uses realistic sample data generation when live scraping fails.
     """
+    print("Starting job scraping workflow...")
     # Step 1: Create job board URLs to scrape
     print("Step 1: Creating job board URLs...")
     job_urls = create_job_board_urls()
@@ -19,9 +20,11 @@ def workflow() -> pl.LazyFrame:
     print("Step 2: Generating realistic job postings...")
     raw_jobs = scrape_job_boards(job_urls)
     
+    
     # Step 2a: Inspect raw scraped data
     print("Step 2a: Inspecting raw job data...")
     raw_inspection = inspect_raw_data(raw_jobs)
+    #print(raw_inspection)
     
     # Step 3: Normalize and clean the job data
     print("Step 3: Normalizing job data...")
@@ -30,9 +33,11 @@ def workflow() -> pl.LazyFrame:
     # Step 3a: Inspect normalized data
     print("Step 3a: Inspecting normalized data...")
     normalized_inspection = inspect_normalized_data(normalized_jobs)
+    #print(normalized_inspection)
     
     # Step 4: Load data to PostgreSQL database
     print("Step 4: Loading to PostgreSQL...")
     final_jobs = load_to_postgres(normalized_jobs)
+    #print(final_jobs)
     
     return final_jobs

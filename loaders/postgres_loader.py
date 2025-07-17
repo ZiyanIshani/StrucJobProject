@@ -77,6 +77,9 @@ def load_to_postgres(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
             
             # Insert data with conflict handling (upsert)
             records_inserted = len(batch_pd)
+            batch_pd = batch_pd.drop_duplicates(
+                subset=["source_job_board","job_title_clean","company_name_clean","location_clean"]
+            ) 
             batch_pd.to_sql(
                 'job_postings',
                 engine,
@@ -90,7 +93,7 @@ def load_to_postgres(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
             # Add database insertion metadata
             batch_df_with_meta = batch_df.with_columns([
                 pl.lit("inserted").alias("db_status"),
-                pl.lit(records_inserted).alias("records_inserted")
+                pl.lit(0).cast(pl.Int64).alias("records_inserted")
             ])
             
             return batch_df_with_meta
@@ -106,7 +109,7 @@ def load_to_postgres(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
             # Return data with error status instead of failing
             batch_df_with_meta = batch_df.with_columns([
                 pl.lit("error").alias("db_status"),
-                pl.lit(0).alias("records_inserted")
+                pl.lit(records_inserted).cast(pl.Int64).alias("records_inserted")
             ])
             
             return batch_df_with_meta
@@ -136,7 +139,7 @@ def load_to_postgres(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
     
     return df.map_batches(load_batch, schema=output_schema)
 
-@analytics_decorator()
+#@analytics_decorator()
 def verify_database_connection(node_metadata=None) -> pl.LazyFrame:
     """
     Verify PostgreSQL database connection and return connection status.

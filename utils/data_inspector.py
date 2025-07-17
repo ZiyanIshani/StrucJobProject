@@ -39,7 +39,7 @@ def inspect_raw_data(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
         ])
     )
 
-@analytics_decorator()
+#@analytics_decorator()
 def inspect_normalized_data(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
     """
     Inspect normalized data to show the transformation results.
@@ -73,7 +73,7 @@ def inspect_normalized_data(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFram
         ])
     )
 
-@analytics_decorator()
+#@analytics_decorator()
 def create_job_summary(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
     """
     Create a summary of job postings by job board and other dimensions.
@@ -92,7 +92,7 @@ def create_job_summary(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
         .sort("total_jobs", descending=True)
     )
 
-@analytics_decorator()
+#@analytics_decorator()
 def analyze_salary_distribution(df: pl.LazyFrame, node_metadata=None) -> pl.LazyFrame:
     """
     Analyze salary distribution across job boards and experience levels.
